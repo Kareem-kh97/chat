@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link
+      href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Import JQuery -->
+    <script src="./js/jquery-3.6.1.min.js"></script>
+
+    <style>
+      .error {
+        color: red;
+        position: inherit !important;
+      }
+
+      .custom-container-border {
+        border: 3px solid grey;
+        border-radius: 0.7rem;
+      }
+
+      .custom-shelf-border {
+        border-bottom: 3px solid grey;
+      }
+
+      .user-message {
+        border-bottom-left-radius: 1rem;
+      }
+
+      .contact-message {
+        border-bottom-right-radius: 1rem;
+      }
+
+      .bg-b {
+        background-color: aqua;
+      }
+
+      .bg-g {
+        background-color: green;
+      }
+
+      .bg-y {
+        background-color: yellow;
+      }
+
+      #messages-row::-webkit-scrollbar {
+        width: 0.2em;
+        background-color: #f5f5f5;
+      }
+
+      #messages-row::-webkit-scrollbar-thumb {
+        background-color: #ef0946;
+      }
+
+      #messages-row::-webkit-scrollbar-track {
+        background-color: #f5f5f5;
+      }
+      button.dropdown-toggle::after {
+        display: none;
+      }
+
+      .msg-options-button {
+        /* display: none; */
+        visibility: hidden;
+      }
+
+      .msg-item:hover .msg-options-button {
+        /* display: block; */
+        visibility: visible;
+      }
+
+      .msg-options-button[aria-expanded="true"]{
+        visibility: visible !important;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="container mt-3">
+        <div class="row">
+          <div name="Contacts col" class="col-4 px-0">
+            <div class="container custom-container-border">
+              <div name="Account row" class="row custom-shelf-border py-2">
+                <div id="get-user-info-button" class="dropdown col-3">
+                  <a href="#" class="d-block link-dark text-decoration-none">
+                  </a>
+                  <button
+                    class="btn dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      fill="currentColor"
+                      class="bi bi-person-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                      />
+                    </svg>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#login-modal"
+                        >login</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#signup-modal"
+                        >signup</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        id="logout"
+                        class="dropdown-item"
+                        href="#"
+                        onclick="UserService.logout()"
+                        >Logout</a
+                      >
+                    </li>
+                    <!-- <li><a id="reset-passowrd" class="dropdown-item" href="#">reset password</a></li> -->
+                  </ul>
+                </div>
+                <!-- <div class="col" id="to-be-hidden">
+                  <p>
+                    Please
+                    <a
+                      href="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#login-modal"
+                      >login</a
+                    >
+                    first!
+                  </p>
+                </div> -->
+
+                <!-- <div class="col-3">
+                  <button
+                    id="logout"
+                    type="button"
+                    class="btn btn-danger"
+                    onclick="UserService.logout()"
+                  >
+                    Logout
+                  </button>
+                </div> -->
+              </div>
+              <div name="Contact list row" class="row py-2">
+                <div id="contact-list-col" name="Contact list col" class="col">
+                  <!-- <div id="contact-1" name="Contact Item" class="card btn text-start mb-1" style="background-color: azure;">
+                  <div class="card-body py-2 px-0">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col">
+                          <p class="fs-5 mb-1">Enes Ekrem</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div name="Chat col" class="col-8">
+            <div class="container custom-container-border" style="height: 100%">
+              <!-- there was no style="max-height: 780px;   <div name="Chat inner row" class="row h-100" style="max-height: 780px;"> -->
+              <div
+                name="Chat inner row"
+                class="row h-100"
+                style="max-height: 780px"
+              >
+                <div name="Chat inner col" class="col align-self-end">
+                  <div
+                    id="messages-row"
+                    name="Messages row"
+                    class="row px-1 py-1 text-center align-items-end"
+                    style="overflow-y: scroll"
+                  >
+                  <div class="col p-0">
+                    <div id="messages-list" class="container">
+
+                    </div>
+                  </div>
+                </div>
+                  <div
+                    name="Input row"
+                    class="row"
+                    style="/*min-height: 40px;*/"
+                  >
+                    <div
+                      id="type-input-col"
+                      name="Input col"
+                      class="col p-1"
+                      style="visibility: hidden"
+                    >
+                      <form id="send-message-form">
+                        <div class="input-group">
+                          <textarea
+                            name="text"
+                            id="input-textarea"
+                            type="text"
+                            class="form-control"
+                            placeholder="Type a message"
+                            aria-describedby="button-addon2"
+                            style="max-height: 200px; height: 40px"
+                            required
+                          ></textarea>
+                          <!-- <input type="text" class="form-control" placeholder="Recipient's username"
+                          aria-label="Recipient's username" aria-describedby="button-addon2"> -->
+                          <button
+                            class="btn btn-success"
+                            type="submit"
+                            id="button-addon2"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              class="bi bi-send"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+                              ></path>
+                            </svg>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <modals>
+      <!-- Modal -->
+      <div
+        id="login-modal"
+        class="modal fade"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="login-modal-label"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="login-modal-label">Login</h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <form id="login-form">
+              <div class="modal-body">
+                <div class="form" style="max-height: 90px">
+                  <label for="floatingInput">Email address</label>
+                  <input
+                    name="email"
+                    type="email"
+                    class="form-control"
+                    id="floatingInput"
+                    placeholder="name@example.com"
+                    value="kareem@gmail.com"
+                    required
+                  />
+                </div>
+                <div class="form" style="max-height: 90px">
+                  <label for="floatingPassword">Password</label>
+                  <input
+                    name="password"
+                    type="password"
+                    class="form-control"
+                    id="floatingPassword"
+                    placeholder="Password"
+                    value="12345678"
+                    required
+                  />
+                </div>
+                <a
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#signup-modal"
+                >
+                  Sign up
+                </a>
+              </div>
+              <div class="modal-footer">
+                <div
+                  id="login-modal-spinner"
+                  class="spinner-border"
+                  role="status"
+                  style="position: absolute; left: 50%; display: none"
+                >
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sign-up Modal -->
+      <div
+        id="signup-modal"
+        class="modal fade"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="signup-modal-label"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="signup-modal-label">Sign Up</h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <form id="signup-form">
+              <div class="modal-body">
+                <div class="form" style="max-height: 90px">
+                  <label for="signup-firstname">First Name</label>
+                  <input
+                    name="first_name"
+                    type="text"
+                    class="form-control"
+                    id="signup-firstname"
+                    placeholder="name@example.com"
+                    required
+                  />
+                </div>
+                <div class="form" style="max-height: 90px">
+                  <label for="signup-lastname">Last name</label>
+                  <input
+                    name="last_name"
+                    type="text"
+                    class="form-control"
+                    id="signup-lastname"
+                    placeholder="name@example.com"
+                    required
+                  />
+                </div>
+                <div class="form" style="max-height: 90px">
+                  <label for="signup-email">Email address</label>
+                  <input
+                    name="email"
+                    type="email"
+                    class="form-control"
+                    id="signup-email"
+                    placeholder="name@example.com"
+                    required
+                  />
+                </div>
+                <div class="form" style="max-height: 90px">
+                  <label for="signup-password">Password</label>
+                  <input
+                    name="password"
+                    type="password"
+                    class="form-control"
+                    id="signup-password"
+                    placeholder="Password"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div
+                  id="signup-modal-spinner"
+                  class="spinner-border"
+                  role="status"
+                  style="position: absolute; left: 50%; display: none"
+                >
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="edit-message-modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Message</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="edit-message-form">
+                <input name="id" type="hidden" id="message-edit-id">
+                <div class="mb-3">
+                  <label for="message-edit-text" class="form-label">Text</label>
+                  <input name="text" type="text" class="form-control" id="message-edit-text">
+                </div>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </modals>
+
+    <script>
+      $("#contact-list-col").height("" + window.innerHeight - 110);
+      // $("#messages-row").css("max-height","" + window.innerHeight - 100 +"px");
+
+      // Every time page refreshes, remove current contact id and current messages
+      localStorage.removeItem("current_contact");
+      localStorage.removeItem("current_messages");
+    </script>
+    <script>
+      // window.addEventListener("load", function() {
+      //   const container = document.getElementById("messages-row");
+      //   container.scrollTop = container.scrollHeight;
+      // });
+    </script>
+    <import>
+      <!-- js folder -->
+      <script src="./js/bootstrap.bundle.min.js"></script>
+      <script src="./js/jquery.validate.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+      <!-- services folder -->
+      <script src="./services/User.js"></script>
+      <script src="./services/Contact.js"></script>
+      <script src="./services/Message.js"></script>
+    </import>
+  </body>
+</html>

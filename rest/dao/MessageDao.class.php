@@ -42,27 +42,39 @@ class MessageDao extends BaseDao
 
   public function softdelete($messageId)
   {
+    if ($this->isSender($messageId) == 1) {
+      $user_condition = 'sender';
+    } else {
+      $user_condition = 'receiver';
+    }
+
+
     $entity = [];
     $entity['messageId'] = $messageId;
     // Flight::json(["message" => "Deleting the message " . $messageId . " (dao)"], 404);
-    $query = "UPDATE messages SET deleted_sender = now() WHERE id = :messageId";
-
-    // $query = "UPDATE messages SET deleted_sender = now()  WHERE (id = :messageId)";
+    $query = "UPDATE messages SET deleted_".$user_condition." = now() WHERE id = :messageId";
 
     $this->query_entity($query, $entity);
     Flight::json(["message" => "Deleted the message " . $messageId . " (dao)"], 200);
   }
 
-  public function updatetext($text, $id)
+  private function isSender($messageId){
+    $user = Flight::get('user');
+    $user_id = $user['id'];
+    $query = "Select :user_id = u.id AS 'output'
+    From messages m
+    JOIN users u on u.id = m.sender_id
+    Where m.id = :messageId";
+    return $this->query_unique($query, ['user_id' => $user_id, 'messageId' => $messageId])['output'];
+  }
+
+  public function updatetext($message, $user_id)
   {
-    $entity = [];
-    $entity['text' . 'id'] = $text;
-    $entity['id'] = $id;
-    
-    $query = "UPDATE messages SET text = :text WHERE id= :id";
-    $this->query_entity($query, $entity);
-    
-    Flight::json(["text" => "Updated the text " . $text . " (dao)"], 200);
+    $message['user_id'] = $user_id;
+    $query = "UPDATE messages SET text = :text WHERE id= :id AND sender_id = :user_id";
+    $this->query_entity($query, $message);
+    Flight::json(["message" => "Message Updated!"], 200);
+
   }
 
 

@@ -21,7 +21,8 @@ const MessageService = {
     $("#edit-message-form").validate({
       submitHandler: function (form) {
         var entity = Object.fromEntries(new FormData(form).entries());
-        MessageService.send_message(entity);
+        // console.log(entity);
+        MessageService.update_text(entity);
       },
     });
   },
@@ -123,6 +124,7 @@ const MessageService = {
       const bg_color =
         contactId === data[i].receiver_id ? "primary" : "secondary";
       const alignment = contactId === data[i].receiver_id ? "end" : "start";
+      const edit_mode = contactId === data[i].receiver_id ? "block" : "none";
       html +=
         `
     <div id="msg-` +
@@ -153,12 +155,10 @@ const MessageService = {
         data[i].id +
         `, '` +
         data[i].text +
-        `')" >Edit Message</a></li>
+        `')" style="display: ` + edit_mode + `">Edit Message</a></li>
           </ul>
         </div>
-          <div class="col-auto py-2 px-3 my-1 ` +
-        senderType +
-        `-message bg-` +
+          <div class="col-auto py-2 px-3 my-1 ` + senderType + `-message bg-` +
         bg_color +
         ` text-end"
             style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
@@ -210,7 +210,7 @@ const MessageService = {
     // entity["receiver_id"] = currentContact;
 
     $.ajax({
-      url: "rest/updatetext/" + id,
+      url: "rest/updatetext",
       type: "PUT",
       data: JSON.stringify(entity), // the entity is the sent data
       contentType: "application/json",
@@ -220,10 +220,15 @@ const MessageService = {
       },
       success: function (result) {
         console.log("IT IS SUCCESSFUL");
-        console.log(result);
-        // MessageService.get_messages(currentContact); //update the message list
+        toastr.success(result.message);
+        $("#edit-message-modal").modal("hide");
+        MessageService.get_messages(parseInt(localStorage.getItem('current_contact')));
       },
-      error: function (XMLHttpRequest, textStatus, errorThrown) {},
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        // toastr.error(XMLHttpRequest.responseJSON.message);
+        toastr.error(errorThrown);
+        console.log(errorThrown);
+      },
     });
   },
 

@@ -5,6 +5,16 @@ const ContactService = {
     ContactService.list();
     ContactService.container_size_updater();
 
+    
+    // validate the edit message form
+    $("#add-friend-form").validate({
+      submitHandler: function (form) {
+        var entity = Object.fromEntries(new FormData(form).entries());
+        // console.log(entity);
+        ContactService.add_friend(entity);
+      },
+    });
+
   },
 
   // check_token: function(){
@@ -92,6 +102,33 @@ const ContactService = {
     window.addEventListener("resize", function(){ // it adds an addEventListener to the "resize" event
       $('#contact-list-col').height(''+window.innerHeight-110) // it sets the height of the container to the hight of the window - 110px
     });
+  },
+
+  add_friend: function(entity){
+    $.ajax({
+      url: "rest/contacts",
+      type: "POST",
+      data: JSON.stringify(entity), // the entity is the sent data
+      contentType: "application/json",
+      dataType: "json", // expected data in the token are of json formate
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
+      },
+      success: function (result) {
+        console.log("IT IS SUCCESSFUL");
+        console.log(result);
+        toastr.success(result['message']);
+        ContactService.list();
+        $('#add-friend-modal').modal('hide');
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        toastr.error(XMLHttpRequest.responseJSON.message);
+        // console.log(XMLHttpRequest);
+        // console.log(textStatus);
+        // console.log(errorThrown);
+      },
+    });
+
   },
 
 };

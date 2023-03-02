@@ -30,4 +30,13 @@ Flight::route('GET /contacts/@id', function($id){
   Flight::json(Flight::contactService()->get_user_contact_messages($user, $id));
 });
 
+Flight::route('POST /contacts', function(){
+  // who is the user who calls this method?
+  $user = Flight::get('user');
+  $entity = Flight::request()->data->getData();
+  // Flight::json(["message" => "Hi "], 404);
+
+  Flight::json(Flight::contactService()->add_friend($user, $entity));
+});
+
 ?>

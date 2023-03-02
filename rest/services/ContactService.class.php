@@ -26,4 +26,10 @@ class ContactService extends BaseService
     // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);
     return $this->dao->get_user_contact_messages($user['id'], $contactId);
   }
+  
+  public function add_friend($user, $contactEmail)
+  {
+    // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);
+    return $this->dao->add_friend($user['id'], $contactEmail);
+  }
 }

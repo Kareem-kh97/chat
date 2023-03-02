@@ -106,9 +106,11 @@ Flight::route('DELETE /softdelete/@id', function ($id) {
   Flight::messageService()->softdelete($id);
 });
 
-Flight::route('PUT /updatetext/@id', function ($id) {
-  $text = Flight::request()->data->text;
-  Flight::messageService()->updatetext($text, $id);
+Flight::route('PUT /updatetext', function () {
+  // Flight::json(["message" => "It works (route)"], 404);
+  $entity = Flight::request()->data->getData();
+  $user = Flight::get('user');
+  Flight::messageService()->updatetext($entity, $user);
 })
 
 

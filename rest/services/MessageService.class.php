@@ -29,4 +29,10 @@ class MessageService extends BaseService
     // Flight::json(["message" => "Deleting the message " . $messageId . " (service)"], 404);
     return $this->dao->softdelete($messageId);
   }
+
+  public function updatetext($message, $user){
+    // Flight::json(["message" => "It works (service)"], 404);
+    $userId = $user['id'];
+    return $this->dao->updatetext($message, $userId);
+  }
 }

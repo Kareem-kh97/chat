@@ -87,73 +87,29 @@
           <div name="Contacts col" class="col-4 px-0">
             <div class="container custom-container-border">
               <div name="Account row" class="row custom-shelf-border py-2">
-                <div id="get-user-info-button" class="dropdown col-3">
-                  <a href="#" class="d-block link-dark text-decoration-none">
-                  </a>
-                  <button
-                    class="btn dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="40"
-                      height="40"
-                      fill="currentColor"
-                      class="bi bi-person-circle"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-                      />
+                <div name="Logout Col" class="col-1 p-0 ps-3 pt-2">
+                  <a name="Logout Button" type="button" onclick="UserService.logout()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="grey" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                      <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
                     </svg>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        href="#"
-                        data-bs-toggle="modal"
-                        data-bs-target="#login-modal"
-                        >login</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        href="#"
-                        data-bs-toggle="modal"
-                        data-bs-target="#signup-modal"
-                        >signup</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        id="logout"
-                        class="dropdown-item"
-                        href="#"
-                        onclick="UserService.logout()"
-                        >Logout</a
-                      >
-                    </li>
-                    <!-- <li><a id="reset-passowrd" class="dropdown-item" href="#">reset password</a></li> -->
-                  </ul>
+                </a>
                 </div>
-                <!-- <div class="col" id="to-be-hidden">
-                  <p>
-                    Please
-                    <a
-                      href="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#login-modal"
-                      >login</a
-                    >
-                    first!
-                  </p>
-                </div> -->
+                <div name="User Name Title" id="get-user-info-button" class="col-9 ps-4 pt-2">
+                  <!-- <h3>Kareem Khamees</h3> -->
+                  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle py-10 px-10" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                  </svg> -->
+                </div>
+                <div name="Add Friend Col" class="col text-end p-2 pe-3">
+                  <a name="Add Friend Button" href="#" data-bs-toggle="modal" data-bs-target="#add-friend-modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                    <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                  </svg>
+                </a>
+                </div>
 
                 <!-- <div class="col-3">
                   <button
@@ -414,6 +370,7 @@
           </div>
         </div>
       </div>
+      <!-- Edit Message Modal -->
       <div id="edit-message-modal" class="modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -423,15 +380,39 @@
             </div>
             <div class="modal-body">
               <form id="edit-message-form">
-                <input name="id" type="hidden" id="message-edit-id">
+                <input name="id" type="hidden" id="message-edit-id" required>
                 <div class="mb-3">
                   <label for="message-edit-text" class="form-label">Text</label>
-                  <input name="text" type="text" class="form-control" id="message-edit-text">
+                  <input name="text" type="text" class="form-control" id="message-edit-text" required>
                 </div>
               </div>
               <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Add Friend Modal -->
+      <div id="add-friend-modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Friend</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="add-friend-form">
+                <div class="mb-3">
+                  <label for="contact-email" class="form-label">Contact Email</label>
+                  <input name="email" type="email" class="form-control" id="contact-email" required>
+                </div>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add Friend</button>
             </form>
             </div>
           </div>

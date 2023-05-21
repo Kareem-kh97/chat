@@ -57,7 +57,8 @@ class MessageDao extends BaseDao
     $this->query_entity($query, $entity);
     Flight::json(["message" => "Deleted the message " . $messageId . " (dao)"], 200);
   }
-
+// to checks for me if the im a sender with a given msgID
+//compare user_id parameter to teh sender u.id
   private function isSender($messageId){
     $user = Flight::get('user');
     $user_id = $user['id'];

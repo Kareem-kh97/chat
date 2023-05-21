@@ -105,7 +105,16 @@ Flight::route('DELETE /softdelete/@id', function ($id) {
 
   Flight::messageService()->softdelete($id);
 });
-
+/**
+ * @OA\PUT(path="/updatetext", tags={"messages"}, security={{"ApiKeyAuth": {}}},summary="Update all user messages from the API. ",
+ *         @OA\Parameter(
+ *             name="id",
+ *             in="path",
+ *             example=1,
+ *             description="updating sent messages for sender."),
+ *         @OA\Response( response=200, description="fetch indivisual messages.")
+ * ),
+ */
 Flight::route('PUT /updatetext', function () {
   // Flight::json(["message" => "It works (route)"], 404);
   $entity = Flight::request()->data->getData();

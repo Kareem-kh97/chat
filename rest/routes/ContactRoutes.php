@@ -29,7 +29,12 @@ Flight::route('GET /contacts/@id', function($id){
 
   Flight::json(Flight::contactService()->get_user_contact_messages($user, $id));
 });
-
+/**
+ * @OA\Get(path="/contacts", tags={"contacts"}, security={{"ApiKeyAuth": {}}},
+ *         summary="Post contacts to the API. ",
+ *         @OA\Response( response=200, description="contacts posting.")
+ * )
+ */
 Flight::route('POST /contacts', function(){
   // who is the user who calls this method?
   $user = Flight::get('user');

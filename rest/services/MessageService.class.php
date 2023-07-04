@@ -13,7 +13,7 @@ class MessageService extends BaseService
     parent::__construct(new MessageDao());
     $this->user_dao = new UserDao();
   }
-// getting me all messages exchanged between mme and the other contact
+// getting messages between user and contact
   public function get_user_contact_messages($user, $contactId)
   {
     // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);

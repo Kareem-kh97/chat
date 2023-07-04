@@ -5,8 +5,9 @@
  *         @OA\Response( response=200, description="List of contacts.")
  * )
  */
-Flight::route('GET /contacts', function(){
-  // who is the user who calls this method?
+
+ Flight::route('GET /contacts', function(){
+  
   $user = Flight::get('user');
   // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);
   // $search = Flight::query('search');
@@ -20,8 +21,8 @@ Flight::route('GET /contacts', function(){
  *     @OA\Response(response="200", description="Fetch individual contact")
  * )
  */
-Flight::route('GET /contacts/@id', function($id){
-  // who is the user who calls this method?
+
+ Flight::route('GET /contacts/@id', function($id){
   $user = Flight::get('user');
   // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);
   // $search = Flight::query('search');
@@ -30,13 +31,12 @@ Flight::route('GET /contacts/@id', function($id){
   Flight::json(Flight::contactService()->get_user_contact_messages($user, $id));
 });
 /**
- * @OA\Get(path="/contacts", tags={"contacts"}, security={{"ApiKeyAuth": {}}},
+ * @OA\POST(path="/contacts", tags={"contacts"}, security={{"ApiKeyAuth": {}}},
  *         summary="Post contacts to the API. ",
  *         @OA\Response( response=200, description="contacts posting.")
  * )
  */
-Flight::route('POST /contacts', function(){
-  // who is the user who calls this method?
+ Flight::route('POST /contacts', function(){
   $user = Flight::get('user');
   $entity = Flight::request()->data->getData();
   // Flight::json(["message" => "Hi "], 404);

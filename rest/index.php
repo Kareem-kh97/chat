@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/services/ContactService.class.php';
 require_once __DIR__.'/services/MessageService.class.php';
@@ -24,29 +25,34 @@ Flight::map('error', function(Exception $ex){
 });
 
 /* utility function for reading query parameters from URL */
-Flight::map('query', function($name, $default_value = NULL){ //$default_value if parameter is not present in the query string
-  $request = Flight::request();
-  $query_param = @$request->query->getData()[$name]; // getting the value of the query with the specified name using getData
-  $query_param = $query_param ? $query_param : $default_value; // if not present set value to default
-  return urldecode($query_param); // returns decoded value
-});
+// Flight::map('query', function($name, $default_value = NULL){ 
+//   $request = Flight::request();
+//   $query_param = @$request->query->getData()[$name]; 
+//   $query_param = $query_param ? $query_param : $default_value; 
+//   return urldecode($query_param); // returns decoded value
+// });
 
-// middleware method for login
+// middleware method
 Flight::route('/*', function(){
   // return TRUE;
   //perform JWT decode
   $path = Flight::request()->url;
-  if ($path == '/login' || $path == '/signup' || $path == '/docs.json') return TRUE; // exclude login route from middleware
+  // exclude these routes from middleware
+  if ($path == '/login' || $path == '/signup' || $path == '/docs.json') return TRUE; 
 
   $headers = getallheaders();
+  // does not exist
   if (@!$headers['Authorization']){
     Flight::json(["message" => "Authorization is missing"], 403);
     return FALSE;
   }else{
     try {
+      // decode the token, store the decoded payload in the flight framework's shared data,
+      // this allows `routes` or `middleware` to access authenticated user's info
+      // token exetracted from 'Authorization' header of the request
       $decoded = (array)JWT::decode($headers['Authorization'], new Key(Config::JWT_SECRET(), 'HS256'));
-      Flight::set('user', $decoded);
-      return TRUE;
+      Flight::set('user', $decoded); 
+      return TRUE; // success
     } catch (\Exception $e) {
       Flight::json(["message" => "Authorization token is not valid"], 403);
       return FALSE;
@@ -55,10 +61,11 @@ Flight::route('/*', function(){
 });
 
 /* REST API documentation endpoint */
+/* generates documentation */
 Flight::route('GET /docs.json', function(){
-  $openapi = \OpenApi\scan('routes');
-  header('Content-Type: application/json');
-  echo $openapi->toJson();
+  $openapi = \OpenApi\scan('routes'); //scan route and generate documentation
+  header('Content-Type: application/json'); // indicating the response will be in json
+  echo $openapi->toJson(); //convert the result
 });
 
 require_once __DIR__.'/routes/ContactRoutes.php';

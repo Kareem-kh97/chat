@@ -26,12 +26,16 @@ use Firebase\JWT\Key;
  */
 
 Flight::route('POST /login', function () {
+  // 1.
   $login = Flight::request()->data->getData();
   // Flight::json(["message" => "Data: ".$login['email']], 404);
+  // 2.
   $user = Flight::userDao()->get_user_by_email($login['email']);
   if (isset($user['id'])) {
+    // 3.
     if ($user['password'] == md5($login['password'])) {
       unset($user['password']); // to delete pass from user obj
+      // 4.
       $jwt = JWT::encode($user, Config::JWT_SECRET(), 'HS256');
       Flight::json(['token' => $jwt]);
     } else {
@@ -41,7 +45,6 @@ Flight::route('POST /login', function () {
     Flight::json(["message" => "User doesn't exist"], 404);
   }
 });
-
 /**
  * @OA\Post(
  *     path="/signup",
@@ -65,22 +68,27 @@ Flight::route('POST /login', function () {
 
 
 Flight::route('POST /signup', function () {
+
   $entity = Flight::request()->data->getData();
+
   $user = Flight::userDao()->get_user_by_email($entity['email']);
+
   if (isset($user['id'])) {
-    // If user with same email already exists
+
     Flight::json(["message" => "User already exist"], 409);
   } else {
     if (strlen($entity['password']) < 8 || strlen($entity['password']) > 20) {
-      // If password is too short or too long
+
       Flight::json(["message" => "Invalid password"], 406);
     } else {
-      // add the user to the database
+
+
       $entity['password'] = md5($entity['password']);
 
       $user = Flight::userService()->signup($entity);
-      // Flight::json($user);
+
       unset($user['password']);
+ 
       $jwt = JWT::encode($user, Config::JWT_SECRET(), 'HS256');
       Flight::json(['token' => $jwt]);
     }

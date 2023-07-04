@@ -17,13 +17,12 @@ const ContactService = {
 
   },
 
-  // check_token: function(){
-  //   var token = localStorage.getItem("token");
-  //   if (!token){
-  //     // show login modal when page loads if there is no token
-  //     $('#login-modal').modal('show');
-  //   }
-  // },
+/**
+ * fetch contacts
+ * set header
+ * generate html for each contact
+ * appeand it to contact_list
+ */
 
   list: function(){
     $.ajax({  // fetch a lsit of contacts from Rest endoint
@@ -49,9 +48,6 @@ const ContactService = {
               </div>
             </div>
           `;
-          // setInterval(function() {
-          //   MessageService.get_messages(data[i].id);
-          // }, 1000);
         }
         $("#contact-list-col").html(html);
         // console.log(data);
@@ -63,6 +59,11 @@ const ContactService = {
     });
   },
 
+  /**
+   * by clicking takes the contactID
+   * set current_contact to contactId
+   * retrieves mesgs using `get_messages`
+   */
   on_contact_click: function(contactId){
 
     if(localStorage.getItem('current_contact') === null){
@@ -87,30 +88,29 @@ const ContactService = {
       MessageService.get_messages(contactId);
     }
 
-    //localstorage
-    // localStorage.setItem('current_contact', contactId) // to update current contactItem in the localStorage object with the ID of the selected contact
-    //getmessages
-  },
-  // get_contact_click: function(contactId){
-  //   //localstorage
-  //   localStorage.getItem('current_contact', contactId)
-  //   //getmessages
-    
-  // },
 
-  container_size_updater: function(){ // responsible for updating the hight of the contactList container whenever teh window is resized
+  },
+
+  /**
+   * updating the hight of the contactList
+   */
+  container_size_updater: function(){ 
     window.addEventListener("resize", function(){ // it adds an addEventListener to the "resize" event
       $('#contact-list-col').height(''+window.innerHeight-110) // it sets the height of the container to the hight of the window - 110px
     });
   },
 
+  /**
+   * 
+   * adding a new contact 
+   */
   add_friend: function(entity){
     $.ajax({
       url: "rest/contacts",
       type: "POST",
       data: JSON.stringify(entity), // the entity is the sent data
       contentType: "application/json",
-      dataType: "json", // expected data in the token are of json formate
+      dataType: "json", // expected response data in the token are of json formate
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
       },

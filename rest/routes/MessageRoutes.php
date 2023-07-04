@@ -8,7 +8,7 @@
  */
 
 Flight::route('GET /messages', function () {
-  // who is the user who calls this method?
+ 
   $user = Flight::get('user');
   // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);
   // $search = Flight::query('search');
@@ -28,7 +28,6 @@ Flight::route('GET /messages', function () {
  * ),
  */
 Flight::route('GET /messages/@id', function ($id) {
-  // who is the user who calls this method?
   $user = Flight::get('user');
   // Flight::json(["message" => "Hi from service ".implode(" ",$user)], 404);
   // $search = Flight::query('search');
@@ -61,17 +60,15 @@ Flight::route('GET /messages/@id', function ($id) {
 
 Flight::route('POST /sendmessage', function () {
   // Flight::json(["message" => "send message called"], 404);
-  // who is the user who calls this method?
-
 
   $message = Flight::request()->data->getData();
   // Flight::json(["message" => $message['sender_id']." ".$message['text']], 404);
   // Flight::json(["message" => implode(" ", $message)], 404);
 
-
   $user = Flight::get('user');
 
   // $message = Flight::request()->data->getData();
+  // setup the senderID as the current user
   $message['sender_id'] = $user['id'];
 
   Flight::messageService()->sendmessage($message);
@@ -121,6 +118,4 @@ Flight::route('PUT /updatetext', function () {
   $user = Flight::get('user');
   Flight::messageService()->updatetext($entity, $user);
 })
-
-
-  ?>
+?>

@@ -9,6 +9,7 @@ const MessageService = {
     MessageService.expandTextarea("input-textarea");
 
     // validate the login form inside the login modal
+    
     $("#send-message-form").validate({
       submitHandler: function (form) {
         var entity = Object.fromEntries(new FormData(form).entries());
@@ -27,6 +28,13 @@ const MessageService = {
     });
   },
 
+  /**
+   * 
+   * retrieving messages for specific contactID by AJAX call
+   * by sending an ajax call to the endpoint 
+   * inside ajax `beforesend` method is used to set the authorization header with a token retrieved from local storage
+   * in case of success then the messages/data is being sent to the list_messages
+   */
   get_messages: function (contactId) {
     $.ajax({
       url: "rest/messages/" + contactId,
@@ -36,8 +44,7 @@ const MessageService = {
       },
       success: function (data) {
         if (MessageService.currentMessages === []) {
-          // if there is no messages in currentMessages array (empty array)
-
+          // no messages in currentMessages array (empty array)
           // set the currentMessages array with response data
           MessageService.currentMessages = data;
           console.log(MessageService.currentMessages);
@@ -66,44 +73,7 @@ const MessageService = {
             );
           }
         }
-        // {
-        //   $("#messages-row").html("");
-        //   var html = "";
-        //   for (let i = 0; i < data.length; i++) {
-        //     const senderType =
-        //       contactId === data[i].receiver_id ? "user" : "contact";
-        //     const bg_color =
-        //       contactId === data[i].receiver_id ? "primary" : "secondary";
-        //     const alignment =
-        //       contactId === data[i].receiver_id ? "end" : "start";
-        //     html +=
-        //       `
-        //   <div name="Message item" class="col-12 p-0">
-        //     <div class="container">
-        //       <div class="row justify-content-` +
-        //       alignment +
-        //       `">
-        //         <div class="col-auto py-2 px-3 my-1 ` +
-        //       senderType +
-        //       `-message bg-` +
-        //       bg_color +
-        //       ` text-end"
-        //           style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-        //           <p class="mb-0 text-white" style="max-width: 500px; text-align: start;  ">` +
-        //       data[i].text +
-        //       `</p>
-        //         </div>
-        //       </div>
-        //     </div>
-        //   </div>
-        //   `;
-        //   }
-        //   $("#messages-row").html(html);
-        // }
-        // console.log(data);
-        // console.log("message text: "+ data[0].text);
-        // console.log("message sender id: "+ data[0].sender_id);//logs sender_id of first message
-        // console.log("message receiver id: "+ data[0].receiver_id);
+      
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         toastr.error(XMLHttpRequest.responseJSON.message);
@@ -116,10 +86,15 @@ const MessageService = {
     $("#messages-list").html("");
     var html = "";
     for (let i = 0; i < data.length; i++) {
-      // if (data[i].deleted === 1) {
-      //   continue; // Skip this message
-      // }
+      
 
+      /**
+       * we are figuring out who is the sender and who is the reiever
+       * if contactID matchs the recieverId ==> `senderType` ==> `sender`
+       * if contactID does not matches the recieverId ==> `senderType` = `contact` 
+       * 
+       * `data` is an associative array that contains the meg  index with the contactId
+       */
       const senderType = contactId === data[i].receiver_id ? "user" : "contact";
       const bg_color =
         contactId === data[i].receiver_id ? "primary" : "secondary";
@@ -180,23 +155,33 @@ const MessageService = {
   },
 
   // it being called when usersubmits the send message form
+  // recieve entity
   send_message: function (entity) {
+    // retrieve the contact from the browser
     const currentContact = localStorage.getItem("current_contact");
+    // set the rID property``of the entity to the currentContact
+    // by now we have the message and the rID
     entity["receiver_id"] = currentContact;
+    //clear
     document.getElementById("input-textarea").value = "";
+    // make a server call
     $.ajax({
       url: "rest/sendmessage",
       type: "POST",
-      data: JSON.stringify(entity), // the entity is the sent data
+      //data to be sent to the entity
+      data: JSON.stringify(entity), 
+      //to say data are in json
       contentType: "application/json",
-      dataType: "json", // expected data in the token are of json formate
+      dataType: "json", // expected data response in json formate
+      // setting the header to `Authorized` by doing so the server can recognize/authorize the user
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
       },
       success: function (result) {
         console.log("IT IS SUCCESSFUL");
         console.log(result);
-        MessageService.get_messages(currentContact); //update the message list
+        //update the message list by getting last messages from contact
+        MessageService.get_messages(currentContact); 
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         // toastr.error(XMLHttpRequest.responseJSON.message);
@@ -296,7 +281,7 @@ const MessageService = {
   },
 
   // toggle_edit_message: function (entity) {
-  //   //update message with new text ajax call
+  // update message with new text ajax call
   // },
 };
 

@@ -1,5 +1,6 @@
+
 <?php
-// we buidl basic CRUD operations
+
 abstract class BaseService {
 // it the business logic layer for our entities
 

@@ -30,8 +30,6 @@ const MessageService = {
 
   /**
    * 
-   * retrieving messages for specific contactID by AJAX call
-   * by sending an ajax call to the endpoint 
    * inside ajax `beforesend` method is used to set the authorization header with a token retrieved from local storage
    * in case of success then the messages/data is being sent to the list_messages
    */
@@ -168,9 +166,8 @@ const MessageService = {
     $.ajax({
       url: "rest/sendmessage",
       type: "POST",
-      //data to be sent to the entity
+      //data to be sent to the server
       data: JSON.stringify(entity), 
-      //to say data are in json
       contentType: "application/json",
       dataType: "json", // expected data response in json formate
       // setting the header to `Authorized` by doing so the server can recognize/authorize the user
@@ -199,14 +196,15 @@ const MessageService = {
       type: "PUT",
       data: JSON.stringify(entity), // the entity is the sent data
       contentType: "application/json",
-      dataType: "json", // expected data in the token are of json formate
+      dataType: "json", // expected Json format response data 
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
       },
       success: function (result) {
-        console.log("IT IS SUCCESSFUL");
+        // console.log("IT IS SUCCESSFUL");
         toastr.success(result.message);
         $("#edit-message-modal").modal("hide");
+        // get the current_contact from localstorage convert it to integer and pass it to get_messages of MessageService class
         MessageService.get_messages(parseInt(localStorage.getItem('current_contact')));
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -286,7 +284,7 @@ const MessageService = {
 };
 
 window.addEventListener("load", () => {
-  // call it on page load so that will sets eventListener
-  //and form validation for send-message form
   MessageService.init();
+  // attach an eventlistener to the load event of window,once the page is loaded the "MessageService.init() will be called"
+  // and setting up the message the message functionality
 });

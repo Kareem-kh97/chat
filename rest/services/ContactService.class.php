@@ -5,7 +5,7 @@ require_once __DIR__ . '/../dao/UserDao.class.php';
 
 class ContactService extends BaseService
 {
-
+// this class to be called from the route file
   private $user_dao;
 
   public function __construct()

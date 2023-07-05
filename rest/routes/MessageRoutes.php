@@ -69,8 +69,9 @@ Flight::route('POST /sendmessage', function () {
 
   // $message = Flight::request()->data->getData();
   // setup the senderID as the current user
+  // or it is going to assign the userID value to the sender_id which is the property of message
   $message['sender_id'] = $user['id'];
-
+// invoks sendmessage() on instance of messageService
   Flight::messageService()->sendmessage($message);
 });
 
